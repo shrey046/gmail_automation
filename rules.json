@@ -1,0 +1,17 @@
+{
+    "rules":[
+        {
+            "conditions": [
+                {
+                    "field": "from_email",
+                    "predicate": "contains",
+                    "value": "noreply@redditmail.com"
+                }
+            ],
+            "action": {
+                "move": "test"
+            },
+            "predicate": "All"
+        }
+    ]
+}
