@@ -5,11 +5,11 @@
                 {
                     "field": "from_email",
                     "predicate": "contains",
-                    "value": "noreply@redditmail.com"
+                    "value": "noreply@jobs.unstop.news"
                 }
             ],
             "action": {
-                "move": "test"
+                "move": "Label_8088039498789001226"
             },
             "predicate": "All"
         }

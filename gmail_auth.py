@@ -1,8 +1,6 @@
 from base64 import urlsafe_b64decode
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
 from dateutil import parser
 
 
@@ -71,10 +69,10 @@ def mark_as_read_or_unread(email_id,action):
         mark = None
     return True if mark else False
 
-# def mark_as_unread(email_id):
-#     mark = service.users().messages().modify(userId="me", id=email_id, body={"addLabelIds": ["UNREAD"]}).execute()
-#     return True if mark else False
-
 def move_to_folder(email_id,mailbox):
-    move = service.users().messages().modify(userId="me", id=email_id, body={'removeLabelIds': [], 'addLabelIds': [mailbox]}).execute()
+    move = service.users().messages().modify(userId="me", id=email_id, body={'addLabelIds': [mailbox]}).execute()
     return True if move else False
+
+def get_valid_mailbox():
+    labels = service.users().labels().list(userId="me").execute().get("labels", [])
+    return [label["id"] for label in labels]

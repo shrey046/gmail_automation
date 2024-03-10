@@ -33,12 +33,10 @@ def store_email_data():
         conn.commit()
 
 def fetch_query(where_condition):
-    print(f"SELECT id FROM emails WHERE {where_condition}")
     cursor.execute(f"SELECT id FROM emails WHERE {where_condition}")
     rows = cursor.fetchall()
     return [row[0] for row in rows]
 
 def update_query(set_value,where_condition):
-    # print(f"UPDATE emails SET {set_value} WHERE {where_condition};")
     cursor.execute(f"UPDATE emails SET {set_value} WHERE {where_condition};")
     conn.commit()

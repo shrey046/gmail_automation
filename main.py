@@ -1,13 +1,14 @@
 import json
-from datetime import datetime, timedelta
 
 from gmail_auth import (
-    mark_as_read_or_unread, move_to_folder
+    mark_as_read_or_unread, move_to_folder, get_valid_mailbox
 )
 
 from sql_queries import (
     create_table, store_email_data, fetch_query, update_query
 )
+
+valid_mailbox = get_valid_mailbox()
 
 def implement_rules(rules):
 
@@ -55,7 +56,7 @@ def implement_rules(rules):
                 set_value = "is_read = 1" if action.get("mark") == "read" else "is_read = 0"
                 where_condition = f"id = '{email_id}'"
                 update_email = update_query(set_value,where_condition)
-            if action.get("move"):
+            if action.get("move") in valid_mailbox:
                 mailbox = action.get("move")
                 move_to_folder(email_id,mailbox)
                 set_value = f"mailbox = '{mailbox}'"
