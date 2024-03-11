@@ -5,6 +5,9 @@ conn = sqlite3.connect("email.db")
 cursor = conn.cursor()
 
 def create_table():
+    """
+    Creates table if nor exists
+    """
     cursor.execute(
         ''' CREATE TABLE IF NOT EXISTS emails
         (
@@ -21,6 +24,11 @@ def create_table():
     conn.commit()
 
 def store_email_data():
+    """
+    Inserting data into database
+    """
+
+    # fetching emails using OAuth
     emails_list = fetch_emails()
 
     for email in emails_list:
@@ -33,10 +41,16 @@ def store_email_data():
         conn.commit()
 
 def fetch_query(where_condition):
+    """
+    Fetches query from the database
+    """
     cursor.execute(f"SELECT id FROM emails WHERE {where_condition}")
     rows = cursor.fetchall()
     return [row[0] for row in rows]
 
 def update_query(set_value,where_condition):
+    """
+    updates the query
+    """
     cursor.execute(f"UPDATE emails SET {set_value} WHERE {where_condition};")
     conn.commit()

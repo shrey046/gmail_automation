@@ -16,6 +16,9 @@ def authenticate():
 service = build("gmail", "v1", credentials=authenticate())
 
 def fetch_emails():
+    """
+    This function will fetch emails using Oauth
+    """
     read_mails = service.users().messages().list(userId="me", labelIds=["INBOX"]).execute()
     mails = read_mails.get("messages",[])
     email_list = []
@@ -42,6 +45,9 @@ def fetch_emails():
 
 
 def get_headers(email,header_name):
+    """
+    This function will fetch email headers
+    """
     headers = email.get("payload", {}).get("headers", [])
     for header in headers:
         if header["name"] == header_name:
@@ -49,6 +55,9 @@ def get_headers(email,header_name):
     return None
 
 def get_message(email):
+    """
+    This function will fetch the message of the email
+    """
     parts = email.get("payload",{}).get("parts", [])
     for part in parts:
         if part["mimeType"] == "text/plain":
@@ -58,6 +67,9 @@ def get_message(email):
     return None
 
 def mark_as_read_or_unread(email_id,action):
+    """
+    This function will read/unread the email based on the action
+    """
     if action == "read":
         mark = service.users().messages().modify(userId="me", id=email_id, body={"removeLabelIds": ["UNREAD"]}).execute()
     elif action == "unread":
@@ -67,6 +79,9 @@ def mark_as_read_or_unread(email_id,action):
     return True if mark else False
 
 def move_to_folder(email_id,mailbox):
+    """
+    This function will move the email to another folder
+    """
     labels = service.users().labels().list(userId='me').execute().get('labels',[])
     for label in labels:
         if label['name'] == mailbox:
@@ -76,5 +91,8 @@ def move_to_folder(email_id,mailbox):
     service.users().messages().modify(userId='me', id=email_id,body=modify_request).execute()
 
 def get_valid_mailbox():
+    """
+    This function will fetch all the valid labels available in the gmail account
+    """
     labels = service.users().labels().list(userId="me").execute().get("labels", [])
     return [label["name"] for label in labels]

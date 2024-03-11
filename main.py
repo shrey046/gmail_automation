@@ -11,6 +11,9 @@ from sql_queries import (
 valid_mailbox = get_valid_mailbox()
 
 def implement_rules(rules):
+    """
+    This function will implement rules and perform actions on them
+    """
 
     rules = rules.get("rules")
     for rule in rules:
