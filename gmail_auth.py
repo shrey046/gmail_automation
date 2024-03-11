@@ -11,9 +11,6 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.modify"]
 def authenticate():
     flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
     creds = flow.run_local_server(port=8000)
-    # Save the credentials for the next run
-    with open("token.json", "w") as token:
-        token.write(creds.to_json())
     return creds
 
 service = build("gmail", "v1", credentials=authenticate())
@@ -70,9 +67,14 @@ def mark_as_read_or_unread(email_id,action):
     return True if mark else False
 
 def move_to_folder(email_id,mailbox):
-    move = service.users().messages().modify(userId="me", id=email_id, body={'addLabelIds': [mailbox]}).execute()
-    return True if move else False
+    labels = service.users().labels().list(userId='me').execute().get('labels',[])
+    for label in labels:
+        if label['name'] == mailbox:
+            label_id = label['id']
+        
+    modify_request = {'addLabelIds': [label_id]}
+    service.users().messages().modify(userId='me', id=email_id,body=modify_request).execute()
 
 def get_valid_mailbox():
     labels = service.users().labels().list(userId="me").execute().get("labels", [])
-    return [label["id"] for label in labels]
+    return [label["name"] for label in labels]
